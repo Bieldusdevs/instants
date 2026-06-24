@@ -31,6 +31,10 @@ interface AppContextType {
   triggerAiMemory: (friendId: string) => void;
   breedPets: (friendPetType: Pet["type"], name: string) => void;
   claimClanMission: (missionId: string) => void;
+  updateUserBio: (bio: string) => void;
+  toggleFollowUser: (friendId: string) => void;
+  voteInGuessPicGame: (friendId: string, inviteId: string, votedName: string) => void;
+  revealGuessPicAuthor: (friendId: string, inviteId: string) => void;
   feedPet: () => void;
   playPet: () => void;
   cleanPet: () => void;
@@ -64,12 +68,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [isSimultaneousActive, setIsSimultaneousActive] = useState(true);
 
   useEffect(() => {
-    const u = localStorage.getItem("instants_u_v5");
+    const u = localStorage.getItem("instants_u_v6");
     if (u) try { setUser(JSON.parse(u)); } catch (e) {}
   }, []);
 
   const saveUser = (u: User | null) => {
-    if (u) localStorage.setItem("instants_u_v5", JSON.stringify(u));
+    if (u) localStorage.setItem("instants_u_v6", JSON.stringify(u));
   };
 
   const registerAccount = (name: string, handle: string, petName: string, petType: Pet["type"]) => {
@@ -84,7 +88,46 @@ export function Providers({ children }: { children: React.ReactNode }) {
     setUser(loggedUser); saveUser(loggedUser);
   };
 
-  const logout = () => { setUser(null); localStorage.removeItem("instants_u_v5"); };
+  const logout = () => { setUser(null); localStorage.removeItem("instants_u_v6"); };
+
+  const updateUserBio = (bio: string) => {
+    if (!user) return;
+    const next = { ...user, bio };
+    setUser(next); saveUser(next);
+  };
+
+  const toggleFollowUser = (friendId: string) => {
+    setChats((prev: any) => prev.map((chat: any) => chat.id === friendId ? {
+      ...chat,
+      isFollowing: !chat.isFollowing,
+      followersCount: !chat.isFollowing ? (chat.followersCount || 100) + 1 : (chat.followersCount || 100) - 1
+    } : chat));
+    if (user) {
+      const next = { ...user, followingCount: user.followingCount + 1 };
+      setUser(next); saveUser(next);
+    }
+  };
+
+  const voteInGuessPicGame = (friendId: string, inviteId: string, votedName: string) => {
+    if (!user) return;
+    setChats((prev: any) => prev.map((chat: any) => chat.id === friendId ? {
+      ...chat,
+      messages: chat.messages.map((m: any) => m.gameInvite && m.gameInvite.id === inviteId ? {
+        ...m,
+        gameInvite: { ...m.gameInvite, votes: { ...(m.gameInvite.votes || {}), [user.id]: votedName } }
+      } : m)
+    } : chat));
+  };
+
+  const revealGuessPicAuthor = (friendId: string, inviteId: string) => {
+    setChats((prev: any) => prev.map((chat: any) => chat.id === friendId ? {
+      ...chat,
+      messages: chat.messages.map((m: any) => m.gameInvite && m.gameInvite.id === inviteId ? {
+        ...m,
+        gameInvite: { ...m.gameInvite, status: "finished" as const, revealedAuthor: "Sofia Neon (Anônimo Sorteado 👁️✨)" }
+      } : m)
+    } : chat));
+  };
 
   const feedPet = () => { setPet((p: any) => ({ ...p, hunger: Math.min(100, p.hunger + 25), xp: p.xp + 15 })); };
   const playPet = () => { setPet((p: any) => ({ ...p, happiness: Math.min(100, p.happiness + 25), energy: Math.max(0, p.energy - 10), xp: p.xp + 20 })); };
@@ -165,9 +208,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
     if (!user) return;
     const inviteMsg = {
       id: `msg-game-${Date.now()}`, senderId: user.id, timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), isMe: true,
-      gameInvite: { id: `inv-${Date.now()}`, gameType, gameName, senderName: user.name, status: "active" as const, myScore: 0, friendScore: 0, question: gameType === "quiz" ? "Qual é o mascote do nosso Clã?" : undefined, options: gameType === "quiz" ? ["Quasar 🐲", "Byte 🐱", "Fênix 🔥"] : undefined, correctOption: 0 }
+      gameInvite: {
+        id: `inv-${Date.now()}`, gameType, gameName, senderName: user.name, status: "active" as const, myScore: 0, friendScore: 0,
+        question: gameType === "quiz" ? "Qual é o mascote do nosso Clã?" : undefined,
+        options: gameType === "quiz" ? ["Quasar 🐲", "Byte 🐱", "Fênix 🔥"] : undefined,
+        anonPhotoUrl: gameType === "guess_pic" ? "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80" : undefined,
+        votes: gameType === "guess_pic" ? {} : undefined
+      }
     };
-    setChats((prev: any) => prev.map((chat: any) => chat.id === friendId ? { ...chat, lastMessage: `🎮 Desafio: ${gameName}`, lastMessageTime: "Agora", messages: [...chat.messages, inviteMsg] } : chat));
+    setChats((prev: any) => prev.map((chat: any) => chat.id === friendId ? { ...chat, lastMessage: `🎮 Jogo funcional: ${gameName}`, lastMessageTime: "Agora", messages: [...chat.messages, inviteMsg] } : chat));
   };
 
   const sendPetInvite = (friendId: string, petName: string, petType: Pet["type"]) => {
@@ -192,6 +241,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       value={{
         user, setUser, pet, setPet, clan, setClan, instants, chats, activeTab, setActiveTab, isSimultaneousActive, setIsSimultaneousActive,
         addInstant, likeInstant, replyWithPhotoOnly, sendMessage, sendGameInvite, sendPetInvite, sendVoiceMessage, sendSecretViewOnce, viewSecretMessage, reactToMessage, sendTimeCapsule, triggerAiMemory, breedPets, claimClanMission,
+        updateUserBio, toggleFollowUser, voteInGuessPicGame, revealGuessPicAuthor,
         feedPet, playPet, cleanPet, sleepPet, updatePetStyle, registerAccount, loginAccount, logout, selectedChatId, setSelectedChatId
       }}
     >

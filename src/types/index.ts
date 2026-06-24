@@ -6,9 +6,14 @@ export interface User {
   streak: number;
   instantsCount: number;
   handle: string;
+  phone?: string;
   password?: string;
   petId?: string;
   isMapPrivate?: boolean;
+  bio?: string;
+  followersCount: number;
+  followingCount: number;
+  isFollowing?: boolean;
 }
 
 export interface Pet {
@@ -85,7 +90,9 @@ export interface GameInvite {
   question?: string;
   options?: string[];
   correctOption?: number;
-  blurredPic?: string;
+  anonPhotoUrl?: string;
+  revealedAuthor?: string;
+  votes?: Record<string, string>; // userId -> nomeVotado
 }
 
 export interface SecretMessage {
@@ -97,7 +104,7 @@ export interface SecretMessage {
 
 export interface VoiceMessage {
   id: string;
-  duration: number; // 5 a 15 seg
+  duration: number;
   waves: number[];
 }
 
@@ -122,7 +129,7 @@ export interface FriendChat {
   name: string;
   handle: string;
   avatar: string;
-  streak: number; // Foguinho 🔥
+  streak: number;
   friendshipLevel: number;
   friendshipXp: number;
   friendshipPet: Pet;
@@ -133,8 +140,11 @@ export interface FriendChat {
   isOnline: boolean;
   isTemporaryRoom?: boolean;
   roomExpiresIn?: string;
-  activityCalendar?: boolean[]; // 30 dias (true = mandou instant)
+  activityCalendar?: boolean[];
   messages: ChatMessage[];
+  bio?: string;
+  followersCount?: number;
+  isFollowing?: boolean;
 }
 
 export interface ClanMission {
@@ -154,7 +164,7 @@ export interface Clan {
   level: number;
   xp: number;
   mascot: Pet;
-  isPerfectDay?: boolean; // Dia Perfeito 🌟
+  isPerfectDay?: boolean;
   members: { id: string; name: string; handle: string; avatar: string; role: 'Líder' | 'Membro'; weeklyPoints: number; hasPostedToday?: boolean }[];
   missions: ClanMission[];
   unlockedCosmetics: string[];

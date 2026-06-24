@@ -2,29 +2,15 @@
 
 import React, { useState } from "react";
 import { useApp } from "../providers/Providers";
-import { Sparkles, Utensils, Shirt, Users, Dna, Rocket, Star, Check } from "lucide-react";
+import { Sparkles, Utensils, Shirt, Users, Dna, Star, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import { Pet3D } from "../canvas/Pet3D";
 
 export function PetTab() {
   const { pet, feedPet, playPet, cleanPet, sleepPet, updatePetStyle, chats, sendPetInvite, breedPets } = useApp();
   const [activeMenu, setActiveMenu] = useState<"care" | "style" | "coop" | "breed">("care");
-  const [selectedFriendInvite, setSelectedFriendInvite] = useState<string | null>(null);
-  const [inviteSent, setInviteSent] = useState(false);
   const [hybridName, setHybridName] = useState("");
-
-  const petEmojis: Record<string, string> = {
-    cat: "🐱",
-    dog: "🐶",
-    dragon: "🐉",
-    fox: "🦊",
-    chimera: "🦄",
-    alien: "👽",
-    phoenix: "🔥🦅"
-  };
-
-  const hatEmojis: Record<string, string> = { none: "", crown: "👑", wizard: "🎩", cap: "🧢" };
-  const glassesEmojis: Record<string, string> = { none: "", cyber: "🕶️", thug: "👓", pixel: "🥽" };
 
   const handleActionConfetti = () => {
     confetti({ particleCount: 25, spread: 50, origin: { y: 0.5 }, colors: ["#ff5500", "#00f0ff", "#ff007f"] });
@@ -37,7 +23,7 @@ export function PetTab() {
   };
 
   return (
-    <div className="mx-auto max-w-md pb-28 pt-3 px-3 space-y-5 text-center">
+    <div className="mx-auto max-w-md pb-28 pt-3 px-3 space-y-4 text-center">
       {/* Top Banner Status */}
       <div className="rounded-2xl bg-dark-card border border-white/10 p-3 shadow-lg flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -52,7 +38,7 @@ export function PetTab() {
               {pet.rarity === "cosmic" && <Star className="h-3 w-3 fill-amber-400 text-amber-400" />}
             </h4>
             <p className="text-[10px] text-neon-cyan font-medium">
-              {pet.rarity === "cosmic" ? "🪐 Mascote Cósmico Raro" : "🐾 Tamagotchi Co-op"}
+              {pet.rarity === "cosmic" ? "🪐 Mascote 3D Cósmico Raro" : "🐾 Tamagotchi 3D Co-op"}
             </p>
           </div>
         </div>
@@ -61,21 +47,27 @@ export function PetTab() {
         </span>
       </div>
 
-      {/* TELA CENTRAL DO PET */}
-      <div className="relative aspect-square w-full rounded-3xl bg-gradient-to-b from-dark-elevated via-dark-card to-dark-bg border border-white/15 p-6 shadow-2xl overflow-hidden flex flex-col items-center justify-center">
+      {/* ARENA CENTRAL DO PET EM THREE.JS 3D */}
+      <div className="relative aspect-square w-full rounded-3xl bg-gradient-to-b from-dark-elevated via-dark-card to-dark-bg border border-white/15 p-4 shadow-2xl overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(#ff5500_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none" />
 
-        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 4, repeat: Infinity }} className="absolute h-56 w-56 rounded-full bg-gradient-to-tr from-fire via-neon-purple to-neon-cyan blur-3xl pointer-events-none" />
+        <div className="absolute top-3 left-4 right-4 z-10 flex justify-between items-center pointer-events-none">
+          <span className="text-[9px] uppercase font-black tracking-widest text-neutral-400 bg-black/40 px-2.5 py-1 rounded-full border border-white/10">
+            Arraste para rotacionar 3D
+          </span>
+          <span className="text-xs">
+            {pet.hat === "crown" && "👑"}
+            {pet.glasses === "cyber" && "🕶️"}
+          </span>
+        </div>
 
-        <motion.div whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }} whileTap={{ scale: 0.9 }} animate={{ y: [0, -12, 0] }} transition={{ y: { duration: 3, repeat: Infinity, ease: "easeInOut" } }} className="relative cursor-pointer select-none py-8 flex flex-col items-center">
-          {pet.hat !== "none" && <span className="absolute -top-6 text-5xl drop-shadow-md animate-bounce">{hatEmojis[pet.hat]}</span>}
-          <span className="text-8xl drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] transition-transform">{petEmojis[pet.type] || "🐉"}</span>
-          {pet.glasses !== "none" && <span className="absolute top-10 text-4xl drop-shadow-lg">{glassesEmojis[pet.glasses]}</span>}
-          {pet.accessory === "chain" && <span className="absolute bottom-6 text-3xl">📿</span>}
-        </motion.div>
+        {/* MOTOR GRÁFICO R3F / THREE.JS */}
+        <div className="h-full w-full">
+          <Pet3D pet={pet} />
+        </div>
 
-        {/* Status Flutuantes */}
-        <div className="absolute bottom-4 left-4 right-4 grid grid-cols-4 gap-1.5 bg-black/60 backdrop-blur-xl p-2.5 rounded-2xl border border-white/10">
+        {/* Barras de Status Vitais */}
+        <div className="absolute bottom-3 left-3 right-3 grid grid-cols-4 gap-1 bg-black/70 backdrop-blur-xl p-2.5 rounded-2xl border border-white/10 z-10">
           <div><p className="text-[9px] uppercase font-bold text-neutral-400">Fome</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-amber-500" style={{ width: `${pet.hunger}%` }} /></div></div>
           <div><p className="text-[9px] uppercase font-bold text-neutral-400">Amor</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-pink" style={{ width: `${pet.happiness}%` }} /></div></div>
           <div><p className="text-[9px] uppercase font-bold text-neutral-400">Higiene</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-cyan" style={{ width: `${pet.hygiene}%` }} /></div></div>
@@ -87,15 +79,15 @@ export function PetTab() {
       <div className="flex justify-center space-x-1.5 bg-dark-card p-1 rounded-2xl border border-white/10">
         {[
           { id: "care", label: "Cuidar 🍗" },
-          { id: "style", label: "Roupas 🎩" },
+          { id: "style", label: "Roupas 3D 🎩" },
           { id: "breed", label: "Breeding 🧬" },
           { id: "coop", label: "Co-op 💌" },
         ].map((m) => (
           <button
             key={m.id}
             onClick={() => setActiveMenu(m.id as any)}
-            className={`flex-1 py-2 rounded-xl text-[11px] font-black transition-all ${
-              activeMenu === m.id ? "bg-fire text-white shadow-md" : "text-neutral-400 hover:text-white"
+            className={`flex-1 py-2 rounded-xl text-[10px] font-black transition-all ${
+              activeMenu === m.id ? "bg-fire text-white shadow-md scale-105" : "text-neutral-400 hover:text-white"
             }`}
           >
             {m.label}
@@ -113,57 +105,26 @@ export function PetTab() {
           </motion.div>
         )}
 
-        {/* ABA BREEDING / EVOLUÇÃO */}
-        {activeMenu === "breed" && (
-          <motion.div key="breed" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 bg-dark-card p-5 rounded-2xl border border-neon-purple/40 text-left shadow-xl relative overflow-hidden">
-            <div className="flex items-center space-x-2 text-neon-purple font-black text-sm">
-              <Dna className="h-5 w-5 animate-spin" />
-              <span>Laboratório Cibernético de Breeding 🧬</span>
-            </div>
-            <p className="text-xs text-neutral-300">
-              Cruze o seu mascote com o mascote de amigos ou eventos de fim de semana para gerar filhotes raros e quimeras cósmicas!
-            </p>
-
-            <input
-              type="text"
-              placeholder="Nome do futuro filhote (Ex: Neo-Alien)"
-              value={hybridName}
-              onChange={(e) => setHybridName(e.target.value)}
-              className="w-full rounded-xl bg-dark-elevated border border-white/15 px-3 py-2.5 text-xs text-white placeholder-neutral-500 focus:border-neon-purple focus:outline-hidden"
-            />
-
-            <div className="grid grid-cols-2 gap-2.5 pt-2">
-              <button
-                onClick={() => handleBreed("alien")}
-                className="rounded-2xl bg-gradient-to-br from-neon-purple/30 to-blue-600/30 border border-neon-purple p-3 text-center hover:scale-105 transition-all"
-              >
-                <span className="text-3xl block mb-1">👽</span>
-                <span className="text-xs font-bold text-white">Cruzar com Alien</span>
-                <span className="text-[9px] text-neon-cyan block mt-0.5">Raridade Cósmica 🪐</span>
-              </button>
-
-              <button
-                onClick={() => handleBreed("phoenix")}
-                className="rounded-2xl bg-gradient-to-br from-fire/30 to-amber-600/30 border border-fire p-3 text-center hover:scale-105 transition-all"
-              >
-                <span className="text-3xl block mb-1">🔥🦅</span>
-                <span className="text-xs font-bold text-white">Cruzar com Fênix</span>
-                <span className="text-[9px] text-fire-light block mt-0.5">Evolução Lendária 🔥</span>
-              </button>
-            </div>
+        {activeMenu === "style" && (
+          <motion.div key="style" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 bg-dark-card p-4 rounded-2xl border border-white/10 text-left">
+            <div><p className="text-xs font-extrabold text-white mb-2">Malhas 3D de Cabeça</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "crown", label: "Coroa Metálica 👑" }, { id: "wizard", label: "Mago 🎩" }, { id: "cap", label: "Boné 🧢" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("hat", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet.hat === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
+            <div><p className="text-xs font-extrabold text-white mb-2">Visores 3D de Olhos</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "cyber", label: "Visor Neon 🕶️" }, { id: "thug", label: "Pixel 👓" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("glasses", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet.glasses === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
           </motion.div>
         )}
 
-        {activeMenu === "style" && (
-          <motion.div key="style" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 bg-dark-card p-4 rounded-2xl border border-white/10 text-left">
-            <div><p className="text-xs font-extrabold text-white mb-2">Chapéus Desbloqueados</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "crown", label: "Coroa 👑" }, { id: "wizard", label: "Mago 🎩" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("hat", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet.hat === i.id ? "bg-fire text-white" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
+        {activeMenu === "breed" && (
+          <motion.div key="breed" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 bg-dark-card p-5 rounded-2xl border border-neon-purple/40 text-left shadow-xl">
+            <div className="flex items-center space-x-2 text-neon-purple font-black text-sm"><Dna className="h-5 w-5 animate-spin" /><span>Laboratório Cibernético de Breeding 3D 🧬</span></div>
+            <p className="text-xs text-neutral-300">Fundir malhas 3D para gerar filhotes raros e quimeras cósmicas!</p>
+            <input type="text" placeholder="Nome do filhote (Ex: Neo-Alien)" value={hybridName} onChange={(e) => setHybridName(e.target.value)} className="w-full rounded-xl bg-dark-elevated border border-white/15 px-3 py-2.5 text-xs text-white" />
+            <div className="grid grid-cols-2 gap-2.5"><button onClick={() => handleBreed("alien")} className="rounded-2xl bg-neon-purple/30 border border-neon-purple p-3 text-center"><span className="text-2xl block mb-1">👽</span><span className="text-xs font-bold text-white">Cruzar Alien</span></button><button onClick={() => handleBreed("phoenix")} className="rounded-2xl bg-fire/30 border border-fire p-3 text-center"><span className="text-2xl block mb-1">🔥🦅</span><span className="text-xs font-bold text-white">Cruzar Fênix</span></button></div>
           </motion.div>
         )}
 
         {activeMenu === "coop" && (
           <motion.div key="coop" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3 bg-dark-card p-4 rounded-2xl border border-white/10 text-left">
-            <h4 className="text-xs font-black text-white">Convidar Dupla do Chat 💌</h4>
-            <div className="space-y-2">{chats.map((chat: any) => (<div key={chat.id} className="flex items-center justify-between rounded-xl bg-dark-elevated p-2.5"><span className="text-xs text-white">{chat.name}</span><button onClick={() => { sendPetInvite(chat.id, pet.name, pet.type); alert("Convite enviado!"); }} className="rounded-lg bg-fire px-2.5 py-1 text-xs font-bold text-white">Convidar</button></div>))}</div>
+            <h4 className="text-xs font-black text-white">Convidar Dupla Co-op 💌</h4>
+            <div className="space-y-2">{chats.map((chat: any) => (<div key={chat.id} className="flex items-center justify-between rounded-xl bg-dark-elevated p-2.5"><span className="text-xs text-white">{chat.name}</span><button onClick={() => { sendPetInvite(chat.id, pet.name, pet.type); alert("Convite Tamagotchi 3D enviado!"); }} className="rounded-lg bg-fire px-2.5 py-1 text-xs font-bold text-white">Convidar</button></div>))}</div>
           </motion.div>
         )}
       </AnimatePresence>

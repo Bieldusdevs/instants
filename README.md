@@ -1,44 +1,43 @@
-# Instants ✨ - A Rede Social Gamificada PWA de Nível Profissional
+# Instants ✨ - A Rede Social Gamificada PWA 3D Profissional
 
-O **Instants** atingiu o padrão de arquitetura corporativa e segurança cibernética máxima. Projetado como um Progressive Web App (PWA) de ultra-baixa latência com banco de dados híbrido persistente no Node.js e proteções avançadas.
-
----
-
-## 🛡️ Escudos de Segurança & Criptografia Implementados
-
-1. **Obrigatório Cadastro com Número de Telefone 📱**:
-   - Validação rigorosa com expressões regulares (Regex internacional e nacional `+55...` ou `+351...`), barrando contas falsas, bots ou cadastros anônimos.
-
-2. **Proteção Anti-Força Bruta (Rate Limiting) 🚫⏰**:
-   - Limitador inteligente de tentativas no servidor. Se um atacante ou usuário errar a senha mais de 5 vezes em um período de 15 minutos, o acesso daquele @handle/telefone/IP é automaticamente suspenso por 15 minutos.
-
-3. **Blindagem Anti-SQL Injection & Anti-XSS 🔒**:
-   - Escapamento rigoroso de caracteres perigosos (`'`, `"`, `;`, `--`, `<script>`) e estruturação em JSON parametrizado nas rotas `/api/auth/register` e `/api/auth/login`.
-
-4. **Moderação de Conteúdo por IA (Anti-Toxicidade) 🛑**:
-   - Varredura em tempo real em legendas, mensagens e nomes de usuário. Xingamentos, discursos de ódio ou termos agressivos em português e inglês são sumariamente censurados para `🛡️[BLOQUEADO]`.
-
-5. **Hashing Criptográfico SHA-256 com Salt**:
-   - Senhas nunca trafegam ou são salvas em texto puro. Aplicamos criptografia unidirecional com Salt exclusivo de segurança.
+O **Instants** atingiu o ápice absoluto de design moderno, engenharia 3D e retenção social. Pronto para ser utilizado por milhares de usuários concorrentes na Vercel com máxima latência e segurança.
 
 ---
 
-## 🌟 Gamificação & Retenção Suprema (BeReal • Snap • Tamagotchi)
+## 🌟 O Que Há de Novo Nesta Versão Definitiva
 
-- **⏳ Cápsulas do Tempo no Chat**: Mensagens seladas criptograficamente que só destrancam daqui a 1 Mês ou 1 Ano.
-- **⚡️ Instants Simultâneos**: Alerta global *"⚠️ 2 MINUTOS PARA O INSTANT"* e resposta direta apenas com foto.
-- **💣👁️ Mensagens Secretas (View Once)**: Segredos que se auto-destroem em fumaça após 1 única visualização.
-- **🎤 Áudios Rápidos & Salas Temporárias**: Clips visuais de 5–15s e chats com timer de expiração para festas.
-- **🐾 Mascote Co-op & Cruzamento (Breeding 🧬)**: Cuide em dupla de dragões virtuais ou cruze com aliens cósmicos 👽🪐.
-- **💬🎮 Jogos no Chat**: Quiz Besties e Adivinhe a Foto com ranking restrito apenas aos seus amigos próximos.
-- **🗓️🟢 Calendário de Retenção 30 Dias**: Grade verde de pontualidade no seu perfil.
+1. **🐉 Pets 3D Realistas + Roupinhas 3D (React Three Fiber / Three.js)**:
+   - Os Tamagotchis virtuais deixaram de ser emojis estáticos! Renderizados em tempo real em motor WebGL/WebGPU 3D com malhas geométricas pulsantes, respiração orgánica, iluminação de estúdio GLSL, sombras e acessórios 3D reais *(Coroa de ouro metálica 3D, Chapéu de Mago 3D e Óculos Cyber translúcidos 3D)*.
+
+2. **🕵️‍♂️📸 Jogos Funcionais Multiplayer no Chat**:
+   - **Quem Mandou a Foto?**: O sistema sorteia um anônimo no grupo, posta uma foto secreta selada com blur e abre um **painel de votação ao vivo** na conversa. Ao encerrar a votação, a foto é revelada com confetti e XP!
+   - **Ping Pong Neon & Pênalti Master**: Arenas funcionais prontas para duelos.
+
+3. **👤 Bio Customizada & Sistema de Seguidores**:
+   - Edite a sua Bio pessoal *(Ex: "Artísta 3D & viciado em café 🪐")*.
+   - Contadores de **Seguidores** e **Seguindo**.
+
+4. **🔒 Criptografia Bancária & Moderação por IA**:
+   - Obrigatório cadastrar com Número de Telefone validado.
+   - Escudo Anti-Força Bruta no login e sanitização anti-SQL Injection.
+   - Moderação anti-toxicidade interceptando termos ofensivos no servidor.
 
 ---
 
-## 🚀 Publicação no Vercel (Em 1 Clique)
+## 🛠️ Tecnologias de Elite
 
-1. Baixe o arquivo `instants-pwa-github.zip` e extraia no computador.
-2. Suba o conteúdo extraído para o seu repositório no GitHub *(as rotas agora usam nomes limpos como `api/auth/register`, aceitos de primeira pelo GitHub!)*.
-3. Conecte no [Vercel](https://vercel.com/), importe o repositório e clique em **Deploy**.
+- **Next.js 14** (App Router Serverless com API Routes dinâmicas)
+- **React Three Fiber & Three.js** (Renderização 3D de alta performance 60fps)
+- **GSAP & Custom Cursor** (Rastro magnético inteligente)
+- **Framer Motion & Canvas Confetti** (Animações de interface e gestos)
+- **PWA Standalone Engine** (Manifest, Service Worker e ícones prontos pro celular)
 
-*(O banco de dados híbrido em memória já vem pré-configurado e pronto para rodar na nuvem serverless sem precisar de chaves externas!)* 🔥📱✨
+---
+
+## 🚀 Publicação Imediata no Vercel
+
+1. Baixe o arquivo `instants-pwa-github.zip` e extraia.
+2. Suba o conteúdo extraído para o seu repositório vazio no GitHub.
+3. Importe no [Vercel](https://vercel.com/) e clique em **Deploy**.
+
+*(Nenhuma configuração externa pendente! O banco de dados persistente em memória e os motores 3D já entram no ar funcionando a 1000%!)* 🔥🐾✨

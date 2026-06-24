@@ -9,7 +9,10 @@ export const CURRENT_USER_MOCK: User = {
   streak: 28,
   instantsCount: 142,
   petId: 'pet-my-1',
-  isMapPrivate: false
+  isMapPrivate: false,
+  bio: 'Criador generativo 3D & entusiasta de café. Explorando o universo do Instants 🪐⚡️',
+  followersCount: 1240,
+  followingCount: 480
 };
 
 export const INITIAL_MY_PET: Pet = {
@@ -36,7 +39,7 @@ export const INITIAL_CLAN: Clan = {
   tag: '[CYBER]',
   level: 15,
   xp: 4200,
-  isPerfectDay: true, // Dia Perfeito Ativo 🌟💯
+  isPerfectDay: true,
   mascot: {
     id: 'clan-pet-1',
     name: 'Quasar',
@@ -126,55 +129,38 @@ export const INITIAL_FRIENDS_CHATS: FriendChat[] = [
     friendshipLevel: 14,
     friendshipXp: 850,
     friendshipPet: INITIAL_CLAN.mascot,
+    bio: 'Artísta digital 3D & Cyber-Tokyo wanderer 🌙✨',
+    followersCount: 3420,
+    isFollowing: true,
     achievements: [
       { id: 'ach-1', title: 'Dia Perfeito Coletivo', icon: '🌟', desc: 'Postaram juntos no BeReal time exato', unlockedAt: 'Hoje' },
       { id: 'ach-2', title: 'Mestre do Áudio', icon: '🎤', desc: 'Trocaram áudios rápidos de 10 segundos', unlockedAt: 'Ontem' }
     ],
     activityCalendar: [true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
-    lastMessage: 'Ouça meu áudio rápido de 8 segundos! 🎤⚡️',
+    lastMessage: 'Adivinhe quem tirou a foto no chat! 🕵️‍♂️📸',
     lastMessageTime: '12:42',
     unreadCount: 1,
     isOnline: true,
     messages: [
       { id: 'm1', senderId: 'friend-1', text: 'Hey Alex! Viu o ranking de amigos hoje? Estamos no topo 🏆', timestamp: '11:20', isMe: false },
       {
-        id: 'm-voice-1',
-        senderId: 'friend-1',
-        timestamp: '11:25',
-        isMe: false,
-        mediaType: 'voice',
-        voiceMessage: { id: 'v-1', duration: 8, waves: [20, 45, 80, 95, 60, 30, 85, 100, 70, 40, 50, 90, 30, 20] }
-      },
-      {
-        id: 'm-sec-1',
+        id: 'm-guess-1',
         senderId: 'friend-1',
         timestamp: '11:30',
         isMe: false,
-        mediaType: 'secret_once',
-        secretMessage: { id: 'sec-1', text: 'Código VIP do nosso After Party Neon! 🪩🔑', viewed: false }
+        gameInvite: {
+          id: 'g-guess-1',
+          gameType: 'guess_pic',
+          gameName: 'Quem Mandou a Foto? 🕵️‍♂️📸',
+          senderName: 'Sofia Neon',
+          status: 'active',
+          myScore: 0,
+          friendScore: 0,
+          anonPhotoUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80',
+          votes: { 'user-me-123': 'Sofia Neon' }
+        }
       },
-      { id: 'm3', senderId: 'friend-1', text: 'Ouça meu áudio rápido de 8 segundos! 🎤⚡️', timestamp: '12:42', isMe: false }
-    ]
-  },
-  {
-    id: 'room-party-1',
-    name: 'Sala After Party Cyber 🪩🎉',
-    handle: '@event.room',
-    avatar: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&auto=format&fit=crop&q=80',
-    streak: 5,
-    friendshipLevel: 1,
-    friendshipXp: 100,
-    friendshipPet: INITIAL_MY_PET,
-    achievements: [],
-    isTemporaryRoom: true,
-    roomExpiresIn: '11h 40m',
-    lastMessage: 'A festa expira amanhã de manhã!! Mandem Instants',
-    lastMessageTime: 'Agora',
-    unreadCount: 3,
-    isOnline: true,
-    messages: [
-      { id: 'p-1', senderId: 'friend-2', text: 'Bem-vindos à sala temporária de sexta-feira!! 🪩🚀', timestamp: '22:00', isMe: false },
-      { id: 'p-2', senderId: 'user-me-123', text: 'Essa sala expira em 12h, bora curtir', timestamp: '22:05', isMe: true }
+      { id: 'm3', senderId: 'friend-1', text: 'Adivinhe quem tirou a foto no chat! 🕵️‍♂️📸', timestamp: '12:42', isMe: false }
     ]
   }
 ];
