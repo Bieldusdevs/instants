@@ -2,16 +2,14 @@
 
 import React from "react";
 import { useApp } from "../providers/Providers";
-import { Sparkles, PawPrint, User as UserIcon, BellRing, Star, Camera } from "lucide-react";
+import { Sparkles, PawPrint, User as UserIcon, BellRing, Camera, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
 
 export function Navbar() {
   const { user, pet, clan, activeTab, setActiveTab, isSimultaneousActive } = useApp();
 
   return (
     <>
-      {/* ALERTA DE FOTO SIMULTÂNEA (BeReal Time) */}
       <AnimatePresence>
         {user && isSimultaneousActive && (
           <motion.div
@@ -49,15 +47,14 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center space-x-2.5">
-            {/* Status Dia Perfeito do Clã */}
             {clan.isPerfectDay && (
-              <span className="flex items-center space-x-1 rounded-full bg-amber-500/20 border border-amber-500/40 px-2 py-1 text-[10px] font-black text-amber-300" title="Dia Perfeito do Clã Ativo!">
+              <span className="flex items-center space-x-1 rounded-full bg-amber-500/20 border border-amber-500/40 px-2 py-1 text-[10px] font-black text-amber-300">
                 <Star className="h-3 w-3 fill-amber-400 text-amber-400 animate-spin" style={{ animationDuration: "6s" }} />
                 <span className="hidden sm:inline">Dia Perfeito 💯</span>
               </span>
             )}
 
-            {user && (
+            {user && pet && (
               <button
                 onClick={() => setActiveTab("pet")}
                 className="flex items-center space-x-1.5 rounded-full bg-fire/15 border border-fire/30 px-3 py-1 text-xs font-black text-fire-light transition-all hover:scale-105"

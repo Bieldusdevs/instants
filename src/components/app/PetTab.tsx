@@ -23,7 +23,7 @@ export function PetTab() {
     setHybridName("");
   };
 
-  if (!user?.petId) {
+  if (!user?.petId || !pet) {
     return (
       <div className="mx-auto max-w-md pb-28 pt-12 px-4 text-center space-y-6">
         <motion.div
@@ -37,7 +37,7 @@ export function PetTab() {
         <div className="space-y-2">
           <h2 className="text-xl font-black text-white">Você Ainda Não Chocou um Mascote! 🐾🥚</h2>
           <p className="text-xs text-neutral-300 max-w-xs mx-auto leading-relaxed">
-            No universo de <strong className="text-white">Instants</strong>, o pet elemental não nasce na criação de conta. <strong>Ele nasce quando você e um bestie decidem chocar um ovo em dupla pelo Chat!</strong>
+            No universo sério de <strong className="text-white">Instants</strong>, o pet elemental não nasce na criação de conta. <strong>Ele nasce quando você e um amigo decidem chocar um ovo em dupla pelo Chat!</strong>
           </p>
         </div>
 
@@ -64,21 +64,20 @@ export function PetTab() {
     );
   }
 
-  const elementalInfo = ELEMENTAL_PETS.find((e) => e.id === pet.type) || ELEMENTAL_PETS[0];
+  const elementalInfo = ELEMENTAL_PETS.find((e) => e.id === pet?.type) || ELEMENTAL_PETS[0];
 
   return (
     <div className="mx-auto max-w-md pb-28 pt-3 px-3 space-y-4 text-center">
-      {/* Top Banner */}
       <div className="rounded-2xl bg-dark-card border border-white/10 p-3 shadow-lg flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
           <div className="flex -space-x-2">
-            {pet.owners.map((owner: any, idx: number) => (
+            {pet?.owners?.map((owner: any, idx: number) => (
               <img key={idx} src={owner.avatar} alt={owner.name} className="h-8 w-8 rounded-full border-2 border-dark-card object-cover" />
             ))}
           </div>
           <div className="text-left">
             <h4 className="text-xs font-black text-white flex items-center space-x-1">
-              <span>{pet.name} ({elementalInfo.name})</span>
+              <span>{pet?.name} ({elementalInfo.name})</span>
             </h4>
             <span className="text-[9px] px-2 py-0.5 rounded-full font-extrabold block w-max mt-0.5" style={{ backgroundColor: elementalInfo.color, color: "#111" }}>
               {elementalInfo.badge} • Co-op
@@ -86,11 +85,10 @@ export function PetTab() {
           </div>
         </div>
         <span className="rounded-full bg-fire/20 border border-fire/40 px-2.5 py-1 text-xs font-black text-fire-light">
-          Nvl {pet.level}
+          Nvl {pet?.level}
         </span>
       </div>
 
-      {/* ARENA ELEMENTAL 3D */}
       <div className="relative aspect-square w-full rounded-3xl bg-gradient-to-b from-dark-elevated via-dark-card to-dark-bg border border-white/15 p-4 shadow-2xl overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(#ff5500_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none" />
 
@@ -99,7 +97,7 @@ export function PetTab() {
             Arraste em 3D
           </span>
           <span className="text-xs">
-            {pet.hat === "crown" && "👑"}
+            {pet?.hat === "crown" && "👑"}
           </span>
         </div>
 
@@ -107,22 +105,19 @@ export function PetTab() {
           <Pet3D pet={pet} />
         </div>
 
-        {/* Barras Vitais */}
         <div className="absolute bottom-3 left-3 right-3 grid grid-cols-4 gap-1 bg-black/75 backdrop-blur-xl p-2.5 rounded-2xl border border-white/10 z-10">
-          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Fome</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-amber-500" style={{ width: `${pet.hunger}%` }} /></div></div>
-          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Amor</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-pink" style={{ width: `${pet.happiness}%` }} /></div></div>
-          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Higiene</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-cyan" style={{ width: `${pet.hygiene}%` }} /></div></div>
-          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Energia</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${pet.energy}%` }} /></div></div>
+          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Fome</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-amber-500" style={{ width: `${pet?.hunger}%` }} /></div></div>
+          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Amor</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-pink" style={{ width: `${pet?.happiness}%` }} /></div></div>
+          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Higiene</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-neon-cyan" style={{ width: `${pet?.hygiene}%` }} /></div></div>
+          <div><p className="text-[9px] uppercase font-bold text-neutral-400">Energia</p><div className="h-1.5 w-full bg-white/10 rounded-full mt-1 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${pet?.energy}%` }} /></div></div>
         </div>
       </div>
 
-      {/* Caixa de Personalidade */}
       <div className="rounded-2xl bg-dark-card/80 p-3.5 border border-white/10 text-left space-y-1">
         <p className="text-xs font-black text-white">✨ Personalidade: {elementalInfo.personality}</p>
         <p className="text-[11px] text-neutral-300 leading-normal">{elementalInfo.desc}</p>
       </div>
 
-      {/* Selector de Abas do Pet */}
       <div className="flex justify-center space-x-1.5 bg-dark-card p-1 rounded-2xl border border-white/10">
         {[
           { id: "care", label: "Cuidar 🍗" },
@@ -154,8 +149,8 @@ export function PetTab() {
 
         {activeMenu === "style" && (
           <motion.div key="style" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 bg-dark-card p-4 rounded-2xl border border-white/10 text-left">
-            <div><p className="text-xs font-extrabold text-white mb-2">Malhas 3D de Cabeça</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "crown", label: "Coroa Metálica 👑" }, { id: "wizard", label: "Mago 🎩" }, { id: "cap", label: "Boné 🧢" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("hat", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet.hat === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
-            <div><p className="text-xs font-extrabold text-white mb-2">Visores 3D de Olhos</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "cyber", label: "Visor Neon 🕶️" }, { id: "thug", label: "Pixel 👓" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("glasses", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet.glasses === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
+            <div><p className="text-xs font-extrabold text-white mb-2">Malhas 3D de Cabeça</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "crown", label: "Coroa Metálica 👑" }, { id: "wizard", label: "Mago 🎩" }, { id: "cap", label: "Boné 🧢" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("hat", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet?.hat === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
+            <div><p className="text-xs font-extrabold text-white mb-2">Visores 3D de Olhos</p><div className="flex space-x-2">{[{ id: "none", label: "Nenhum" }, { id: "cyber", label: "Visor Neon 🕶️" }, { id: "thug", label: "Pixel 👓" }].map((i) => (<button key={i.id} onClick={() => updatePetStyle("glasses", i.id)} className={`px-3 py-1.5 rounded-xl text-xs font-bold ${pet?.glasses === i.id ? "bg-fire text-white shadow-md" : "bg-dark-elevated text-neutral-300"}`}>{i.label}</button>))}</div></div>
           </motion.div>
         )}
 
@@ -171,7 +166,7 @@ export function PetTab() {
         {activeMenu === "coop" && (
           <motion.div key="coop" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3 bg-dark-card p-4 rounded-2xl border border-white/10 text-left">
             <h4 className="text-xs font-black text-white">Convidar Bestie pro Co-op 💌</h4>
-            <div className="space-y-2">{chats.map((chat: any) => (<div key={chat.id} className="flex items-center justify-between rounded-xl bg-dark-elevated p-2.5"><span className="text-xs text-white">{chat.name}</span><button onClick={() => { sendPetInvite(chat.id, pet.name, pet.type); alert("Convite Tamagotchi 3D enviado!"); }} className="rounded-lg bg-fire px-2.5 py-1 text-xs font-bold text-white">Convidar</button></div>))}</div>
+            <div className="space-y-2">{chats.map((chat: any) => (<div key={chat.id} className="flex items-center justify-between rounded-xl bg-dark-elevated p-2.5"><span className="text-xs text-white">{chat.name}</span><button onClick={() => { sendPetInvite(chat.id, pet?.name || "Byte", pet?.type || "foguinho"); alert("Convite Tamagotchi 3D enviado!"); }} className="rounded-lg bg-fire px-2.5 py-1 text-xs font-bold text-white">Convidar</button></div>))}</div>
           </motion.div>
         )}
       </AnimatePresence>

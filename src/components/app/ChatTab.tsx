@@ -2,14 +2,15 @@
 
 import React, { useState } from "react";
 import { useApp } from "../providers/Providers";
-import { Flame, Send, ArrowLeft, CheckCheck, Eye, Clock, Film, Mic, Bomb, Egg, Sparkles, X, Lock, Play } from "lucide-react";
+import { Flame, Send, ArrowLeft, Eye, Clock, Film, Mic, Bomb, Egg, Sparkles, X, Play, UserPlus, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { ELEMENTAL_PETS, ElementalPetInfo } from "@/data/elementalPets";
+import { ELEMENTAL_PETS } from "@/data/elementalPets";
 
 export function ChatTab() {
-  const { user, setUser, chats, selectedChatId, setSelectedChatId, sendMessage, sendGameInvite, sendPetInvite, sendVoiceMessage, sendSecretViewOnce, viewSecretMessage, reactToMessage, triggerAiMemory, sendTimeCapsule, voteInGuessPicGame, revealGuessPicAuthor } = useApp();
+  const { user, setUser, chats, selectedChatId, setSelectedChatId, sendMessage, sendGameInvite, sendPetInvite, sendVoiceMessage, sendSecretViewOnce, viewSecretMessage, reactToMessage, triggerAiMemory, sendTimeCapsule, voteInGuessPicGame, revealGuessPicAuthor, startNewChatWith } = useApp();
   const [inputText, setInputText] = useState("");
+  const [newFriendHandle, setNewFriendHandle] = useState("");
   
   const [showSecretModal, setShowSecretModal] = useState(false);
   const [showCapsuleModal, setShowCapsuleModal] = useState(false);
@@ -67,8 +68,15 @@ export function ChatTab() {
     if (user) {
       const next = { ...user, petId: "pet-my-1" };
       setUser(next);
-      localStorage.setItem("instants_u_v6", JSON.stringify(next));
+      localStorage.setItem("instants_u_v7", JSON.stringify(next));
     }
+  };
+
+  const handleStartNewFriend = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFriendHandle.trim()) return;
+    startNewChatWith(newFriendHandle);
+    setNewFriendHandle("");
   };
 
   const reactionEmojis = ["❤️", "🔥", "🚀", "💩", "⚡️", "💜"];
@@ -77,51 +85,68 @@ export function ChatTab() {
     <div className="mx-auto max-w-md pb-24 pt-2 px-3 min-h-[80vh]">
       <AnimatePresence mode="wait">
         {!activeChat ? (
-          <motion.div key="chat-list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+          <motion.div key="chat-list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-lg font-black text-white">Mensagens & Festas 🎉💬</h2>
-              <span className="text-xs font-bold text-neutral-400">{chats.length} chats ativos</span>
+              <h2 className="text-lg font-black text-white">Mensagens Privadas 💬</h2>
+              <span className="text-xs font-bold text-neutral-400">{chats.length} conexões</span>
             </div>
 
-            <div className="space-y-2.5">
-              {chats.map((chat: any) => (
-                <motion.div
-                  key={chat.id}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setSelectedChatId(chat.id)}
-                  className={`cursor-pointer overflow-hidden rounded-2xl p-3.5 shadow-xl backdrop-blur-md flex items-center justify-between transition-colors border ${
-                    chat.isTemporaryRoom ? "bg-gradient-to-r from-neon-pink/20 to-dark-card border-neon-pink/50" : "bg-dark-card border-white/10 hover:border-white/20"
-                  }`}
-                >
-                  <div className="flex items-center space-x-3.5 min-w-0">
-                    <div className="relative shrink-0">
-                      <img src={chat.avatar} alt={chat.name} className="h-12 w-12 rounded-full object-cover border border-white/10" />
-                      {chat.isOnline && <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-dark-card" />}
-                    </div>
-                    <div className="min-w-0 flex-1 pr-2">
-                      <div className="flex items-center space-x-1.5">
-                        <h3 className="text-sm font-bold text-white truncate">{chat.name}</h3>
-                        {chat.isTemporaryRoom ? (
-                          <span className="rounded-full bg-neon-pink px-1.5 py-0.5 text-[8px] font-black text-white">⏳ {chat.roomExpiresIn}</span>
-                        ) : (
-                          <span className="rounded-full bg-neon-pink/20 border border-neon-pink/40 px-1.5 py-0.5 text-[9px] font-black text-neon-pink">Nvl {chat.friendshipLevel || 1} 💖</span>
-                        )}
+            {/* ADICIONAR NOVO AMIGO AO CHAT */}
+            <form onSubmit={handleStartNewFriend} className="rounded-2xl bg-dark-card border border-fire/40 p-3 shadow-lg flex items-center space-x-2">
+              <input
+                type="text"
+                placeholder="Conectar com @handle (Ex: sofia.neon)"
+                value={newFriendHandle}
+                onChange={(e) => setNewFriendHandle(e.target.value)}
+                className="flex-1 rounded-xl bg-dark-elevated border border-white/10 px-3 py-2 text-xs text-white placeholder-neutral-500 focus:outline-hidden focus:border-fire"
+              />
+              <button type="submit" className="rounded-xl bg-fire px-3 py-2 text-xs font-black text-white hover:bg-fire-glow shadow-sm shrink-0 flex items-center space-x-1">
+                <UserPlus className="h-3.5 w-3.5" />
+                <span>Conectar</span>
+              </button>
+            </form>
+
+            {chats.length === 0 ? (
+              <div className="rounded-3xl bg-dark-card/60 border border-white/5 p-8 text-center space-y-3">
+                <MessageCircle className="h-10 w-10 text-neutral-500 mx-auto" />
+                <p className="text-sm font-bold text-white">Sua caixa de mensagens está limpa!</p>
+                <p className="text-xs text-neutral-400 max-w-xs mx-auto">Digite o @handle de um amigo acima e clique em 'Conectar' para abrirem um chat privado criptografado.</p>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {chats.map((chat: any) => (
+                  <motion.div
+                    key={chat.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedChatId(chat.id)}
+                    className="cursor-pointer overflow-hidden rounded-2xl p-3.5 shadow-xl backdrop-blur-md flex items-center justify-between transition-colors border bg-dark-card border-white/10 hover:border-white/20"
+                  >
+                    <div className="flex items-center space-x-3.5 min-w-0">
+                      <div className="relative shrink-0">
+                        <img src={chat.avatar} alt={chat.name} className="h-12 w-12 rounded-full object-cover border border-white/10" />
+                        {chat.isOnline && <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-dark-card" />}
                       </div>
-                      <p className="text-xs text-neutral-400 truncate mt-0.5">{chat.lastMessage}</p>
+                      <div className="min-w-0 flex-1 pr-2">
+                        <div className="flex items-center space-x-1.5">
+                          <h3 className="text-sm font-bold text-white truncate">{chat.name}</h3>
+                          <span className="rounded-full bg-neon-pink/20 border border-neon-pink/40 px-1.5 py-0.5 text-[9px] font-black text-neon-pink">Nvl {chat.friendshipLevel || 1} 💖</span>
+                        </div>
+                        <p className="text-xs text-neutral-400 truncate mt-0.5">{chat.lastMessage}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-col items-end shrink-0 space-y-1">
-                    <span className="flex items-center space-x-1 rounded-full bg-fire/15 border border-fire/30 px-2 py-0.5 text-[11px] font-black text-fire-light">
-                      <Flame className="h-3 w-3 fill-fire text-fire animate-fire-flicker" />
-                      <span>{chat.streak}d</span>
-                    </span>
-                    <span className="text-[10px] text-neutral-500">{chat.lastMessageTime}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    <div className="flex flex-col items-end shrink-0 space-y-1">
+                      <span className="flex items-center space-x-1 rounded-full bg-fire/15 border border-fire/30 px-2 py-0.5 text-[11px] font-black text-fire-light">
+                        <Flame className="h-3 w-3 fill-fire text-fire animate-fire-flicker" />
+                        <span>{chat.streak}d</span>
+                      </span>
+                      <span className="text-[10px] text-neutral-500">{chat.lastMessageTime}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         ) : (
           <motion.div key="chat-room" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="flex flex-col h-[78vh] bg-dark-card/60 rounded-3xl border border-white/10 overflow-hidden shadow-2xl backdrop-blur-xl relative">
@@ -134,7 +159,7 @@ export function ChatTab() {
                     <h3 className="text-xs font-bold text-white">{activeChat.name}</h3>
                     <span className="text-[10px] text-neon-pink font-black">Nvl {activeChat.friendshipLevel} 💖</span>
                   </div>
-                  <p className="text-[9px] text-emerald-400 font-medium">Besties Cibernéticos ✨</p>
+                  <p className="text-[9px] text-emerald-400 font-medium">Conectado SSL ✨</p>
                 </div>
               </div>
 
@@ -183,9 +208,9 @@ export function ChatTab() {
                       <div className="rounded-2xl bg-black/85 p-3.5 border border-neon-cyan space-y-3 text-center min-w-[230px] my-1">
                         <div className="flex items-center justify-center space-x-1 text-neon-cyan font-black text-xs">
                           <Eye className="h-4 w-4 animate-bounce" />
-                          <span>Jogo: Quem Tirou a Foto? 🕵️‍♂️📸</span>
+                          <span>Quem Tirou a Foto? 🕵️‍♂️📸</span>
                         </div>
-                        <p className="text-[10px] text-neutral-300">Olhe a foto nítida e vote em quem do squad disparou!</p>
+                        <p className="text-[10px] text-neutral-300">Olhe a foto abaixo e adivinhe quem do squad disparou!</p>
 
                         <div className="relative aspect-square rounded-xl overflow-hidden border border-white/20">
                           <img src={msg.gameInvite.photoUrl || "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80"} alt="Guess Pic" className="w-full h-full object-cover" />
@@ -278,7 +303,6 @@ export function ChatTab() {
               </div>
             </div>
 
-            {/* MODAL ESCOLHER OS 8 MASCOTES ELEMENTAIS CHIBI DA FOTO PARA CHOCAR EM DUPLA */}
             <AnimatePresence>
               {showPetInviteModal && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 bg-black/95 p-5 flex flex-col justify-center text-left">
